@@ -508,7 +508,7 @@ async def analyze_text(input_data: TextInput):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-app.mount("/", StaticFiles(directory="../", html=True), name="static")
+# app.mount("/", StaticFiles(directory="../", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn

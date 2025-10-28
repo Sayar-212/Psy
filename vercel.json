@@ -7,12 +7,16 @@
   ],
   "routes": [
     {
-      "src": "/analyze",
+      "src": "/api/(.*)",
       "dest": "backend/main.py"
     },
     {
-      "src": "/(.*)",
+      "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|ico|mp3))",
       "dest": "/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     }
   ]
 }
