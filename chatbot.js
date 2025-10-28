@@ -244,7 +244,7 @@ class PsyGenAssessment {
     
     async scoreResponse(response, question) {
         try {
-            const result = await fetch('http://localhost:8000/score-response', {
+            const result = await fetch('/api/score-response', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -287,7 +287,7 @@ class PsyGenAssessment {
     
     async getAnalysis(score, responses) {
         try {
-            const result = await fetch('http://localhost:8000/analyze-depression', {
+            const result = await fetch('/api/analyze-depression', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
