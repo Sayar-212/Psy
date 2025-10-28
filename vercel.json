@@ -1,34 +1,13 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "backend/main.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.js",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.mp3",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(analyze|analyze-whatsapp|score-response|analyze-depression)",
+      "src": "/api/(.*)",
       "dest": "backend/main.py"
     },
     {

@@ -294,6 +294,7 @@ Return JSON:
         return json.loads(match.group())
     raise ValueError("Failed to analyze behavior")
 
+@app.post("/api/score-response")
 @app.post("/score-response")
 async def score_response(input_data: ResponseScore):
     """Score a single response on 0-3 scale using LLM"""
@@ -349,6 +350,7 @@ Return ONLY a JSON object:
         print(f"Scoring error: {e}")
         return {"score": 1, "reasoning": "Error in scoring", "crisis": False}
 
+@app.post("/api/analyze-depression")
 @app.post("/analyze-depression")
 async def analyze_depression(input_data: DepressionAnalysis):
     """Provide personalized analysis and recommendations based on total score"""
@@ -440,6 +442,7 @@ Return JSON:
         ]
     }
 
+@app.post("/api/analyze-whatsapp")
 @app.post("/analyze-whatsapp")
 async def analyze_whatsapp(input_data: ImageInput):
     try:
@@ -460,6 +463,7 @@ async def analyze_whatsapp(input_data: ImageInput):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/analyze")
 @app.post("/analyze")
 async def analyze_text(input_data: TextInput):
     text = input_data.text.strip()
