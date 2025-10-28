@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Analysis Results - Psy</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="writeup.css">
+    <style>
+        .results-container { max-width: 1000px; margin: 0 auto; padding: 8rem 6% 4rem; }
+        .result-section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); padding: 2.5rem; margin-bottom: 2rem; }
+        .result-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .metric { display: flex; justify-content: space-between; margin: 0.75rem 0; padding: 1rem; background: rgba(255, 255, 255, 0.03); }
+        .metric-value { font-weight: 600; }
+        .btn { background: #fff; color: #000; border: none; padding: 1rem 2rem; font-size: 1rem; cursor: pointer; margin-top: 2rem; font-family: inherit; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="window.location.href='dashboard.html'"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="results-container">
+        <div class="result-section">
+            <h1 id="behaviorType"></h1>
+            <p id="behaviorDesc"></p>
+        </div>
+        
+        <div class="result-section">
+            <h2>SOCIAL BEHAVIOR METRICS</h2>
+            <div id="metrics"></div>
+        </div>
+
+        <button class="btn" onclick="window.location.href='social-analyzer.html'">Analyze Again</button>
+    </main>
+
+    <script type="module">
+        import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCJQUtCC7M9bKC936EmfmMpd4_BvQOOyo",
+            authDomain: "psy-ec2a6.firebaseapp.com",
+            projectId: "psy-ec2a6",
+            storageBucket: "psy-ec2a6.firebasestorage.app",
+            messagingSenderId: "330888428865",
+            appId: "1:330888428865:web:fe615cb979914e3e9cb5c0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        const result = JSON.parse(localStorage.getItem('whatsappResult'));
+        if (!result) window.location.href = 'whatsapp-chat.html';
+
+        document.getElementById('behaviorType').textContent = result.personality_type.type;
+        document.getElementById('behaviorDesc').textContent = result.personality_type.description;
+
+        const metrics = result.social_behavior;
+        const metricNames = {
+            response_engagement: 'Response Engagement',
+            emotional_expressiveness: 'Emotional Expressiveness',
+            conversation_initiation: 'Conversation Initiation',
+            social_reciprocity: 'Social Reciprocity',
+            attachment_style: 'Attachment Style',
+            communication_clarity: 'Communication Clarity',
+            empathy_display: 'Empathy Display',
+            boundary_management: 'Boundary Management'
+        };
+
+        document.getElementById('metrics').innerHTML = Object.entries(metrics)
+            .filter(([key]) => key !== 'confidence' && key !== 'behavioral_summary')
+            .map(([key, value]) => `
+                <div class="metric">
+                    <span>${metricNames[key] || key}</span>
+                    <span class="metric-value">${value}/5</span>
+                </div>
+            `).join('');
+    </script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Felix Titling', 'Trajan Pro', Georgia, serif;
+    background: #000;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: transparent;
+    z-index: 1000;
+}
+
+.nav-left {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.nav-center {
+    display: flex;
+    justify-content: center;
+}
+
+.nav-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-left a, .nav-right a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    transition: color 0.2s;
+}
+
+.nav-left a:hover, .nav-right a:hover {
+    color: #fff;
+}
+
+.intro-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.intro-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 2rem;
+}
+
+.intro-icon {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease 0.5s forwards;
+}
+
+.intro-title {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    opacity: 0;
+}
+
+.intro-description {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    opacity: 0;
+}
+
+.chat-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease;
+}
+
+.chat-container.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6rem 0 2rem;
+    scroll-behavior: smooth;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.message {
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: messageSlideIn 0.5s ease forwards;
+}
+
+.message.user {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.message.bot {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.bot-avatar {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    padding: 4px;
+}
+
+.bot-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 1rem 1.5rem;
+    border-radius: 18px;
+    word-wrap: break-word;
+    line-height: 1.5;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.message.bot .message-content {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 18px 18px 18px 4px;
+}
+
+.message.user .message-content {
+    background: #fff;
+    color: #000;
+    border-radius: 18px 18px 4px 18px;
+}
+
+.chat-input-area {
+    padding: 1rem 2rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    background: #000;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 0.5rem;
+    transition: border-color 0.2s;
+}
+
+.input-wrapper:focus-within {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+#userInput {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    outline: none;
+}
+
+#userInput::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+#sendBtn {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    margin-right: 0.25rem;
+}
+
+#sendBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+.typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid rgba(255, 255, 255, 0.7);
+    animation: typewriter 2s steps(40) forwards;
+}
+
+.typing-cursor {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    .chat-messages {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .chat-input-area {
+        padding: 1rem;
+    }
+    
+    nav {
+        padding: 1.5rem 1rem;
+    }
+    
+    .intro-title {
+        font-size: 2rem;
+    }
+    
+    .message-content {
+        max-width: 85%;
+    }
+    
+    .message.bot {
+        gap: 0.5rem;
+    }
+    
+    .bot-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.875rem;
+    }
+}

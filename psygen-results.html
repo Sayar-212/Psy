@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wellness Report - PsyGen</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="writeup.css">
+    <style>
+        body { user-select: none; -webkit-user-select: none; transition: filter 0.3s; }
+        .results-container { max-width: 900px; margin: 0 auto; padding: 8rem 6% 4rem; }
+        .termination-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 99999; align-items: center; justify-content: center; }
+        .termination-overlay.active { display: flex; }
+        .termination-content { text-align: center; padding: 3rem; max-width: 500px; }
+        .termination-content h2 { font-size: 2rem; margin-bottom: 1rem; color: #ff4444; }
+        .termination-content p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 2rem; }
+        .termination-btn { background: #fff; color: #000; border: none; padding: 1rem 3rem; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .termination-btn:hover { opacity: 0.9; }
+        .wellness-header { text-align: center; padding: 3rem 2rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 2rem; }
+        .wellness-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .wellness-header p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); }
+        .result-section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); padding: 2.5rem; margin-bottom: 2rem; }
+        .result-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
+        .recommendation { padding: 1.25rem; margin: 1rem 0; background: rgba(255, 255, 255, 0.03); border-left: 3px solid rgba(255, 255, 255, 0.3); }
+        .recommendation-number { font-weight: 600; color: rgba(255, 255, 255, 0.5); margin-right: 0.5rem; }
+        .action-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+        .btn { background: #fff; color: #000; border: none; padding: 1rem 2rem; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25); }
+        .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-secondary:hover { border-color: #fff; background: rgba(255, 255, 255, 0.05); box-shadow: none; }
+        .score-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9999; align-items: center; justify-content: center; }
+        .score-modal.active { display: flex; }
+        .score-content { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); padding: 3rem; max-width: 500px; text-align: center; }
+        .score-content h2 { margin-bottom: 1rem; }
+        .score-value { font-size: 4rem; font-weight: 600; margin: 2rem 0; }
+        .score-level { font-size: 1.5rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; }
+        .code-input { width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-size: 1rem; text-align: center; margin-bottom: 1rem; }
+        .code-error { color: rgba(255, 100, 100, 0.8); margin-top: 0.5rem; display: none; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="window.location.href='dashboard.html'"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <button class="btn-secondary" id="scoreBtn" style="padding: 0.6rem 1.4rem; font-size: 0.875rem;">See My Score</button>
+    </nav>
+
+    <main class="results-container">
+        <div class="wellness-header">
+            <h1>Your Wellness Report</h1>
+            <p id="mainMessage"></p>
+        </div>
+        
+        <div class="result-section">
+            <h2>💙 Personalized Recommendations</h2>
+            <div id="recommendations"></div>
+        </div>
+
+        <div class="result-section">
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='psygen.html'">Take Assessment Again</button>
+                <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="score-modal" id="scoreModal">
+        <div class="score-content">
+            <h2>Specialist Access</h2>
+            <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 2rem;">Enter the specialist code to view your numerical score</p>
+            <input type="text" id="codeInput" class="code-input" placeholder="Enter code" maxlength="20">
+            <p class="code-error" id="codeError">Incorrect code. Please try again.</p>
+            <div id="scoreDisplay" style="display: none;">
+                <div class="score-value" id="scoreValue"></div>
+                <div class="score-level" id="scoreLevel"></div>
+                <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.95rem;">This score is for clinical reference. What matters most is how you're feeling and taking steps to care for yourself. 💙</p>
+            </div>
+            <div class="action-buttons" style="margin-top: 2rem;">
+                <button class="btn" id="verifyBtn" onclick="verifyCode()">Verify</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const result = JSON.parse(localStorage.getItem('psygenResult'));
+        if (!result) {
+            window.location.href = 'psygen.html';
+        }
+
+        document.getElementById('mainMessage').textContent = result.analysis.message;
+        
+        document.getElementById('recommendations').innerHTML = result.analysis.recommendations
+            .map((rec, index) => `
+                <div class="recommendation">
+                    <span class="recommendation-number">${index + 1}.</span>${rec}
+                </div>
+            `).join('');
+
+        document.getElementById('scoreBtn').addEventListener('click', () => {
+            document.getElementById('scoreModal').classList.add('active');
+            document.getElementById('codeInput').focus();
+        });
+
+        document.getElementById('codeInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') verifyCode();
+        });
+
+        window.verifyCode = function() {
+            const code = document.getElementById('codeInput').value.trim();
+            if (code === 'Sayar125') {
+                document.getElementById('codeInput').style.display = 'none';
+                document.getElementById('verifyBtn').style.display = 'none';
+                document.getElementById('codeError').style.display = 'none';
+                document.getElementById('scoreDisplay').style.display = 'block';
+                document.getElementById('scoreValue').textContent = `${result.totalScore}/30`;
+                document.getElementById('scoreLevel').textContent = `Level: ${result.analysis.level}`;
+            } else {
+                document.getElementById('codeError').style.display = 'block';
+                document.getElementById('codeInput').value = '';
+            }
+        };
+
+        window.closeModal = function() {
+            document.getElementById('scoreModal').classList.remove('active');
+            document.getElementById('codeInput').value = '';
+            document.getElementById('codeError').style.display = 'none';
+            document.getElementById('codeInput').style.display = 'block';
+            document.getElementById('verifyBtn').style.display = 'inline-block';
+            document.getElementById('scoreDisplay').style.display = 'none';
+        };
+
+        // Prevent screenshots
+        let blurTimeout;
+        
+        document.addEventListener('keyup', (e) => {
+            if (e.key == 'PrintScreen') {
+                navigator.clipboard.writeText('');
+                terminateSession();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'c')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        window.addEventListener('blur', () => {
+            blurTimeout = setTimeout(() => {
+                terminateSession();
+            }, 2000);
+        });
+        
+        window.addEventListener('focus', () => {
+            clearTimeout(blurTimeout);
+        });
+        
+        function terminateSession() {
+            document.getElementById('terminationOverlay').classList.add('active');
+        }
+        
+        function confirmTermination() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <div class="termination-overlay" id="terminationOverlay">
+        <div class="termination-content">
+            <h2>⚠️ Screenshot Detected</h2>
+            <p>For privacy and security reasons, screenshots are not allowed during this assessment.</p>
+            <button class="termination-btn" onclick="confirmTermination()">OK</button>
+        </div>
+    </div>
+</body>
+</html>

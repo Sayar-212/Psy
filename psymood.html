@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsyMood - Choose Your Path</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="psymood.css">
+    <style>
+        .gen-animated {
+            display: inline-block;
+            background: linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff0000);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rgbShift 2s linear infinite;
+            font-weight: 700;
+        }
+        @keyframes rgbShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <div class="nav-right">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>PsyMood</h1>
+            <p>Choose your mood analysis approach</p>
+        </section>
+
+        <section class="options">
+            <div class="option-card" onclick="window.location.href='psygen.html'">
+                <div class="option-icon">⚡</div>
+                <h2>PsyGen</h2>
+                <p>AI-powered mental wellness assessment</p>
+                <button class="btn-option">Lets Psy<span class="gen-animated">Gen</span></button>
+            </div>
+
+            <div class="option-card" onclick="window.location.href='psyrule.html'">
+                <div class="option-icon">◈</div>
+                <h2>PsyRule</h2>
+                <p>Rule-based mood assessment</p>
+                <button class="btn-option">Coming Soon</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsyGen - Mental Wellness Assessment</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="chatbot.css">
+    <style>
+        body { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+        * { -webkit-touch-callout: none; }
+        .intro-description { font-family: 'Times New Roman', Times, serif !important; }
+        .termination-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 99999; align-items: center; justify-content: center; }
+        .termination-overlay.active { display: flex; }
+        .termination-content { text-align: center; padding: 3rem; max-width: 500px; }
+        .termination-content h2 { font-size: 2rem; margin-bottom: 1rem; color: #ff4444; }
+        .termination-content p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 2rem; }
+        .termination-btn { background: #fff; color: #000; border: none; padding: 1rem 3rem; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .termination-btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="psygen-bg.mp3" type="audio/mpeg">
+    </audio>
+
+    <nav>
+        <div class="nav-left">
+            <a href="psymood.html">Back</a>
+        </div>
+        <div class="nav-center">
+            <img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="nav-logo">
+        </div>
+        <div class="nav-right">
+            <a href="dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="intro-container" id="introContainer">
+        <div class="intro-content">
+            <div class="intro-icon">💙</div>
+            <h1 class="intro-title" id="introTitle"></h1>
+            <p class="intro-description" id="introDescription"></p>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Type your response..." autocomplete="off" onpaste="return false;">
+                <button id="sendBtn">↑</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="termination-overlay" id="terminationOverlay">
+        <div class="termination-content">
+            <h2>⚠️ Screenshot Detected</h2>
+            <p>For privacy and security reasons, screenshots are not allowed during this assessment.</p>
+            <button class="termination-btn" onclick="confirmTermination()">OK</button>
+        </div>
+    </div>
+
+    <script src="chatbot.js"></script>
+</body>
+</html>

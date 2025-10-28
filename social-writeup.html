@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsySocial - Long Writeup</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="writeup.css">
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="window.location.href='dashboard.html'"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="writeup-container">
+        <h1>PsySocial Analysis</h1>
+        <p class="subtitle">Share your thoughts for deep psychological insights</p>
+
+        <div class="writeup-box">
+            <textarea 
+                id="textInput" 
+                placeholder="Write your thoughts here... (minimum 5 words, maximum 300 words)"
+            ></textarea>
+            <div class="char-count">
+                <span id="wordCount">0</span> / 300 words
+                <span id="minWarning" class="warning">Minimum 5 words required</span>
+            </div>
+            <button id="analyzeBtn" class="analyze-btn" disabled>Analyze</button>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCJQUtCC7M9bKC936EmfmMpd4_BvQOOyo",
+            authDomain: "psy-ec2a6.firebaseapp.com",
+            projectId: "psy-ec2a6",
+            storageBucket: "psy-ec2a6.firebasestorage.app",
+            messagingSenderId: "330888428865",
+            appId: "1:330888428865:web:fe615cb979914e3e9cb5c0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+
+        const textInput = document.getElementById('textInput');
+        const wordCount = document.getElementById('wordCount');
+        const minWarning = document.getElementById('minWarning');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        textInput.addEventListener('input', () => {
+            const text = textInput.value.trim();
+            const words = text ? text.split(/\s+/).filter(word => word.length > 0) : [];
+            const count = words.length;
+            
+            wordCount.textContent = count;
+
+            if (count >= 5 && count <= 300) {
+                minWarning.style.display = 'none';
+                analyzeBtn.disabled = false;
+            } else {
+                if (count < 5) {
+                    minWarning.textContent = 'Minimum 5 words required';
+                } else {
+                    minWarning.textContent = 'Maximum 300 words exceeded';
+                }
+                minWarning.style.display = 'inline';
+                analyzeBtn.disabled = true;
+            }
+        });
+
+        analyzeBtn.addEventListener('click', async () => {
+            const text = textInput.value.trim();
+            const words = text.split(/\s+/).filter(word => word.length > 0);
+            if (words.length >= 5 && words.length <= 300) {
+                analyzeBtn.disabled = true;
+                analyzeBtn.textContent = 'Analyzing...';
+                
+                try {
+                    const response = await fetch('http://localhost:8000/analyze', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({text: text})
+                    });
+                    
+                    if (!response.ok) throw new Error('Analysis failed');
+                    
+                    const result = await response.json();
+                    localStorage.setItem('analysisResult', JSON.stringify(result));
+                    window.location.href = 'results.html';
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.textContent = 'Analyze';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

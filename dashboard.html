@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Psy</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="dashboard-container">
+        <h1>Choose Your Analysis</h1>
+        <p class="subtitle">Select a tool to begin your journey of self-discovery</p>
+
+        <div class="options-grid">
+            <div class="option-card" onclick="window.location.href='social-analyzer.html'">
+                <img src="https://www.dropbox.com/scl/fi/xv1m7ia7prt3tiqm6f4uu/Screenshot-2025-10-13-025617.png?rlkey=3jr0bwe4idyjs760ndp5ox0km&st=0k3gifzw&raw=1" alt="PsySocial" class="option-icon-img">
+                <h2>PsySocial</h2>
+                <p>Analyze your social media posts to understand your digital emotional footprint</p>
+                <div class="option-arrow">→</div>
+            </div>
+
+            <div class="option-card" onclick="window.location.href='whatsapp-chat.html'">
+                <img src="https://www.dropbox.com/scl/fi/fy7z6cw0pimff8dh3w3cm/Screenshot-2025-10-13-025741.png?rlkey=ttpdned057dqflo34wtmsbzmd&st=cogbwa5r&raw=1" alt="PsyChat" class="option-icon-img">
+                <h2>PsyChat</h2>
+                <p>Decode patterns in your conversations and messaging behavior</p>
+                <div class="option-arrow">→</div>
+            </div>
+
+            <div class="option-card" onclick="window.location.href='psymood.html'">
+                <img src="https://www.dropbox.com/scl/fi/8r4myhhk0waehzspy0aci/Screenshot-2025-10-13-025758.png?rlkey=i7o4d9fb6v6uwe0u60sp62cfq&st=wwo0fijj&raw=1" alt="PsyMood" class="option-icon-img">
+                <h2>PsyMood</h2>
+                <p>Assess your mental wellness through advanced textual analysis</p>
+                <div class="option-arrow">→</div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCJQUtCC7M9bKC936EmfmMpd4_BvQOOyo",
+            authDomain: "psy-ec2a6.firebaseapp.com",
+            projectId: "psy-ec2a6",
+            storageBucket: "psy-ec2a6.firebasestorage.app",
+            messagingSenderId: "330888428865",
+            appId: "1:330888428865:web:fe615cb979914e3e9cb5c0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

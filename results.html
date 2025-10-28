@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - PsySocial</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="writeup.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .results-container { max-width: 1000px; margin: 0 auto; padding: 8rem 6% 4rem; }
+        .result-section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); padding: 2.5rem; margin-bottom: 2rem; transition: all 0.3s; }
+        .result-section:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.15); }
+        .result-section h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
+        .trait { display: flex; justify-content: space-between; margin: 0.75rem 0; padding: 1rem 1.25rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s; }
+        .trait:hover { background: rgba(255, 255, 255, 0.05); }
+        .trait-name { font-weight: 500; font-size: 0.95rem; }
+        .trait-value { font-weight: 600; font-size: 1rem; }
+        .personality-type { text-align: center; padding: 4rem 2rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 2rem; }
+        .personality-type h1 { margin: 0; font-size: 3rem; font-weight: 600; letter-spacing: 0.05em; }
+        .personality-type p { margin: 1rem 0 0; font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); }
+        .action-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+        .btn { background: #fff; color: #000; border: none; padding: 1rem 2rem; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25); }
+        .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-secondary:hover { border-color: #fff; background: rgba(255, 255, 255, 0.05); box-shadow: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-item { text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .stat-value { font-size: 2rem; font-weight: 600; display: block; margin-bottom: 0.5rem; }
+        .stat-label { font-size: 0.875rem; color: rgba(255, 255, 255, 0.6); }
+        .thinking-section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.5rem; margin-bottom: 2rem; }
+        .thinking-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .thinking-header h3 { margin: 0; font-size: 1.1rem; font-weight: 500; }
+        .thinking-toggle { font-size: 1.2rem; transition: transform 0.3s; }
+        .thinking-toggle.open { transform: rotate(180deg); }
+        .thinking-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .thinking-content.open { max-height: none; margin-top: 1rem; overflow: visible; }
+        .thinking-text { color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-family: 'Times New Roman', Times, serif; font-size: 1.05rem; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="window.location.href='dashboard.html'"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="results-container" id="pdfContent">
+        <div class="result-section personality-type" id="personalityType"></div>
+        
+        <div class="thinking-section">
+            <div class="thinking-header" onclick="toggleThinking()">
+                <h3>🧠 Thinking Analysis</h3>
+                <span class="thinking-toggle" id="thinkingToggle">▼</span>
+            </div>
+            <div class="thinking-content" id="thinkingContent">
+                <div class="thinking-text" id="thinkingText"></div>
+            </div>
+        </div>
+        
+        <div class="result-section">
+            <h2>OCEAN PERSONALITY TRAITS</h2>
+            <div id="oceanTraits"></div>
+        </div>
+
+        <div class="result-section">
+            <h2>MBTI ANALYSIS</h2>
+            <div id="mbtiTraits"></div>
+        </div>
+
+        <div class="result-section">
+            <h2>LEXICAL FEATURES</h2>
+            <div id="lexicalTraits"></div>
+        </div>
+
+        <div class="result-section">
+            <h2>ANALYSIS SUMMARY</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value" id="hybridScore"></span>
+                    <span class="stat-label">Hybrid Score</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="confidenceLevel"></span>
+                    <span class="stat-label">Confidence</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="wordCount"></span>
+                    <span class="stat-label">Words Analyzed</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='social-writeup.html'">Analyze Again</button>
+                <button class="btn btn-secondary" onclick="downloadPDF()">Download PDF</button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCJQUtCC7M9bKC936EmfmMpd4_BvQOOyo",
+            authDomain: "psy-ec2a6.firebaseapp.com",
+            projectId: "psy-ec2a6",
+            storageBucket: "psy-ec2a6.firebasestorage.app",
+            messagingSenderId: "330888428865",
+            appId: "1:330888428865:web:fe615cb979914e3e9cb5c0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        const result = JSON.parse(localStorage.getItem('analysisResult'));
+        if (!result) {
+            window.location.href = 'social-writeup.html';
+        }
+
+        document.getElementById('personalityType').innerHTML = `
+            <h1>${result.personality_type.type}</h1>
+            <p>${result.personality_type.description}</p>
+        `;
+
+        document.getElementById('oceanTraits').innerHTML = Object.entries(result.ocean)
+            .filter(([key]) => key !== 'confidence')
+            .map(([key, value]) => `
+                <div class="trait">
+                    <span class="trait-name">${key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                    <span class="trait-value">${value}/5</span>
+                </div>
+            `).join('');
+
+        document.getElementById('mbtiTraits').innerHTML = `
+            <div class="trait"><span class="trait-name">Type</span><span class="trait-value">${result.mbti.type}</span></div>
+            <div class="trait"><span class="trait-name">E/I Score</span><span class="trait-value">${result.mbti.ei}</span></div>
+            <div class="trait"><span class="trait-name">S/N Score</span><span class="trait-value">${result.mbti.sn}</span></div>
+            <div class="trait"><span class="trait-name">T/F Score</span><span class="trait-value">${result.mbti.tf}</span></div>
+            <div class="trait"><span class="trait-name">J/P Score</span><span class="trait-value">${result.mbti.jp}</span></div>
+        `;
+
+        document.getElementById('lexicalTraits').innerHTML = Object.entries(result.lexical)
+            .filter(([key]) => key !== 'confidence')
+            .map(([key, value]) => `
+                <div class="trait">
+                    <span class="trait-name">${key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
+                    <span class="trait-value">${value}/5</span>
+                </div>
+            `).join('');
+
+        document.getElementById('hybridScore').textContent = result.hybrid_score;
+        document.getElementById('confidenceLevel').textContent = result.confidence_level.toUpperCase();
+        document.getElementById('wordCount').textContent = result.word_count;
+
+        const thinkingAnalysis = result.thinking ? 
+            `PsyThinking:\n\n${result.thinking.ocean}\n\n${result.thinking.mbti}\n\n${result.thinking.lexical}` :
+            `PsyThinking:\n\nEvaluated text for OCEAN traits, assessed MBTI dimensions, analyzed lexical features, and calculated hybrid score. Confidence: ${result.word_count} words = ${result.confidence_level}`;
+
+        document.getElementById('thinkingText').textContent = thinkingAnalysis;
+
+        window.toggleThinking = function() {
+            const content = document.getElementById('thinkingContent');
+            const toggle = document.getElementById('thinkingToggle');
+            content.classList.toggle('open');
+            toggle.classList.toggle('open');
+        };
+
+        window.downloadPDF = function() {
+            const element = document.getElementById('pdfContent');
+            const opt = {
+                margin: 1,
+                filename: `PsySocial-Analysis-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: '#000' },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        };
+    </script>
+</body>
+</html>

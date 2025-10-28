@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chat Analysis - Psy</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="writeup.css">
+    <style>
+        .upload-box {
+            width: 100%;
+            max-width: 600px;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-box:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .upload-box.dragover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #fileInput {
+            display: none;
+        }
+        .preview-img {
+            max-width: 100%;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="window.location.href='dashboard.html'"><img src="https://www.dropbox.com/scl/fi/8s80stxfd9n2zmayneqv6/Screenshot-2025-10-13-044146_imgupscaler.ai_General_4K-Photoroom.png?rlkey=8acaenj6w66ki3qf3nheu29jo&st=obyzuf3x&raw=1" alt="Psy Logo" class="logo-icon">PSY</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="writeup-container">
+        <h1>WhatsApp Chat Analysis</h1>
+        <p class="subtitle">Upload a screenshot of your WhatsApp chat</p>
+
+        <div class="upload-box" id="uploadBox">
+            <div class="method-icon">📱</div>
+            <h3>Drop image here or click to upload</h3>
+            <p style="color: rgba(255, 255, 255, 0.5); margin-top: 1rem;">Supports JPG, PNG</p>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <img id="preview" class="preview-img" style="display: none;">
+        <button id="analyzeBtn" class="analyze-btn" style="display: none;">Analyze Chat</button>
+    </main>
+
+    <script type="module">
+        import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCJQUtCC7M9bKC936EmfmMpd4_BvQOOyo",
+            authDomain: "psy-ec2a6.firebaseapp.com",
+            projectId: "psy-ec2a6",
+            storageBucket: "psy-ec2a6.firebasestorage.app",
+            messagingSenderId: "330888428865",
+            appId: "1:330888428865:web:fe615cb979914e3e9cb5c0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        let selectedFile = null;
+
+        uploadBox.addEventListener('click', () => fileInput.click());
+
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('dragover');
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('dragover');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFile(file);
+        });
+
+        function handleFile(file) {
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                analyzeBtn.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analyzing...';
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64Image = e.target.result.split(',')[1];
+                
+                try {
+                    const response = await fetch('http://localhost:8000/analyze-whatsapp', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({image: base64Image})
+                    });
+                    
+                    if (!response.ok) throw new Error('Analysis failed');
+                    
+                    const result = await response.json();
+                    localStorage.setItem('whatsappResult', JSON.stringify(result));
+                    window.location.href = 'whatsapp-results.html';
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.textContent = 'Analyze Chat';
+                }
+            };
+            reader.readAsDataURL(selectedFile);
+        });
+    </script>
+</body>
+</html>
