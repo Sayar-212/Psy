@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="writeup.css">
     <style>
         body { user-select: none; -webkit-user-select: none; transition: filter 0.3s; }
-        .results-container { max-width: 900px; margin: 0 auto; padding: 8rem 6% 4rem; }
+        .results-container { max-width: 1100px; margin: 0 auto; padding: 8rem 6% 4rem; }
         .termination-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 99999; align-items: center; justify-content: center; }
         .termination-overlay.active { display: flex; }
         .termination-content { text-align: center; padding: 3rem; max-width: 500px; }
@@ -16,25 +16,47 @@
         .termination-content p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 2rem; }
         .termination-btn { background: #fff; color: #000; border: none; padding: 1rem 3rem; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: inherit; }
         .termination-btn:hover { opacity: 0.9; }
-        .wellness-header { text-align: center; padding: 3rem 2rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 2rem; }
-        .wellness-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .wellness-header p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); }
-        .result-section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); padding: 2.5rem; margin-bottom: 2rem; }
-        .result-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
-        .recommendation { padding: 1.25rem; margin: 1rem 0; background: rgba(255, 255, 255, 0.03); border-left: 3px solid rgba(255, 255, 255, 0.3); }
-        .recommendation-number { font-weight: 600; color: rgba(255, 255, 255, 0.5); margin-right: 0.5rem; }
-        .action-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
-        .btn { background: #fff; color: #000; border: none; padding: 1rem 2rem; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25); }
-        .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .btn-secondary:hover { border-color: #fff; background: rgba(255, 255, 255, 0.05); box-shadow: none; }
+        
+        .wellness-header { text-align: center; padding: 3rem 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 3rem; border-radius: 12px; }
+        .wellness-header h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .wellness-header .severity-badge { display: inline-block; padding: 0.5rem 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; font-size: 0.875rem; margin-top: 1rem; }
+        
+        .summary-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)); border: 1px solid rgba(255, 255, 255, 0.1); padding: 2.5rem; margin-bottom: 2rem; border-radius: 12px; backdrop-filter: blur(10px); }
+        .summary-card h2 { font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .summary-card p { font-size: 1.125rem; line-height: 1.8; color: rgba(255, 255, 255, 0.85); }
+        
+        .analysis-card { background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 2.5rem; margin-bottom: 2rem; border-radius: 12px; }
+        .analysis-card h2 { font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .analysis-card p { font-size: 1.05rem; line-height: 1.8; color: rgba(255, 255, 255, 0.85); white-space: pre-wrap; }
+        
+        .recommendations-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .recommendation-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.75rem; border-radius: 10px; transition: all 0.3s; }
+        .recommendation-card:hover { transform: translateY(-4px); border-color: rgba(99, 102, 241, 0.5); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15); }
+        .recommendation-card .rec-number { display: inline-block; width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 50%; text-align: center; line-height: 32px; font-weight: 600; font-size: 0.875rem; margin-bottom: 1rem; }
+        .recommendation-card .rec-text { font-size: 1rem; line-height: 1.7; color: rgba(255, 255, 255, 0.9); }
+        
+        .action-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap; }
+        .btn { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; border: none; padding: 1rem 2.5rem; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s; font-family: inherit; border-radius: 8px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
+        .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); }
+        .btn-secondary:hover { border-color: #6366f1; background: rgba(99, 102, 241, 0.1); box-shadow: none; }
+        .btn-analysis { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2)); border: 1px solid rgba(99, 102, 241, 0.5); }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; align-items: center; justify-content: center; overflow-y: auto; }
+        .modal.active { display: flex; }
+        .modal-content { background: linear-gradient(135deg, rgba(30, 30, 40, 0.98), rgba(20, 20, 30, 0.98)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 3rem; max-width: 900px; width: 90%; margin: 2rem auto; border-radius: 12px; max-height: 85vh; overflow-y: auto; }
+        .modal-content h2 { margin-bottom: 2rem; font-size: 2rem; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modal-content .analysis-text { font-size: 1.05rem; line-height: 1.9; color: rgba(255, 255, 255, 0.85); white-space: pre-wrap; }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(255, 255, 255, 0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; transition: all 0.2s; }
+        .modal-close:hover { background: rgba(255, 100, 100, 0.3); }
+        
         .score-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9999; align-items: center; justify-content: center; }
         .score-modal.active { display: flex; }
-        .score-content { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); padding: 3rem; max-width: 500px; text-align: center; }
+        .score-content { background: linear-gradient(135deg, rgba(30, 30, 40, 0.98), rgba(20, 20, 30, 0.98)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 3rem; max-width: 500px; text-align: center; border-radius: 12px; }
         .score-content h2 { margin-bottom: 1rem; }
-        .score-value { font-size: 4rem; font-weight: 600; margin: 2rem 0; }
+        .score-value { font-size: 4rem; font-weight: 600; margin: 2rem 0; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .score-level { font-size: 1.5rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; }
-        .code-input { width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-size: 1rem; text-align: center; margin-bottom: 1rem; }
+        .code-input { width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-size: 1rem; text-align: center; margin-bottom: 1rem; border-radius: 8px; }
         .code-error { color: rgba(255, 100, 100, 0.8); margin-top: 0.5rem; display: none; }
     </style>
 </head>
@@ -47,31 +69,38 @@
     <main class="results-container">
         <div class="wellness-header">
             <h1>Your Wellness Report</h1>
+            <div class="severity-badge" id="severityBadge"></div>
+        </div>
+        
+        <div class="summary-card">
+            <h2>💙 Personal Message</h2>
             <p id="mainMessage"></p>
         </div>
         
-        <div class="result-section" id="reasoningSection" style="display: none;">
-            <h2>🧠 Detailed Analysis</h2>
-            <div id="reasoning" style="color: rgba(255, 255, 255, 0.85); line-height: 1.8; white-space: pre-wrap;"></div>
+        <div class="analysis-card" id="detailedAnalysisCard" style="display: none;">
+            <h2>📊 Clinical Assessment</h2>
+            <p id="detailedAnalysis"></p>
         </div>
 
-        <div class="result-section" id="detailedAnalysisSection" style="display: none;">
-            <h2>📊 Comprehensive Assessment</h2>
-            <div id="detailedAnalysis" style="color: rgba(255, 255, 255, 0.85); line-height: 1.8; white-space: pre-wrap;"></div>
+        <div class="summary-card">
+            <h2>💡 Personalized Recommendations</h2>
+            <div class="recommendations-grid" id="recommendations"></div>
         </div>
 
-        <div class="result-section">
-            <h2>💙 Personalized Recommendations</h2>
-            <div id="recommendations"></div>
-        </div>
-
-        <div class="result-section">
-            <div class="action-buttons">
-                <button class="btn" onclick="window.location.href='psygen.html'">Start Chat Again</button>
-                <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
-            </div>
+        <div class="action-buttons">
+            <button class="btn btn-analysis" id="showAnalysisBtn" style="display: none;">🧠 Show Detailed Analysis</button>
+            <button class="btn" onclick="window.location.href='psygen.html'">Start Chat Again</button>
+            <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
         </div>
     </main>
+
+    <div class="modal" id="analysisModal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close" onclick="closeAnalysisModal()">×</button>
+            <h2>🧠 Chain-of-Thought Analysis</h2>
+            <div class="analysis-text" id="reasoningContent"></div>
+        </div>
+    </div>
 
     <div class="score-modal" id="scoreModal">
         <div class="score-content">
@@ -97,26 +126,41 @@
             window.location.href = 'psygen.html';
         }
 
+        document.getElementById('severityBadge').textContent = `Severity: ${result.analysis.level}`;
         document.getElementById('mainMessage').textContent = result.analysis.message;
-        
-        // Display reasoning if available
-        if (result.analysis.reasoning) {
-            document.getElementById('reasoningSection').style.display = 'block';
-            document.getElementById('reasoning').textContent = result.analysis.reasoning;
-        }
         
         // Display detailed analysis if available
         if (result.analysis.detailed_analysis) {
-            document.getElementById('detailedAnalysisSection').style.display = 'block';
+            document.getElementById('detailedAnalysisCard').style.display = 'block';
             document.getElementById('detailedAnalysis').textContent = result.analysis.detailed_analysis;
+        }
+        
+        // Display reasoning button if available
+        if (result.analysis.reasoning) {
+            document.getElementById('showAnalysisBtn').style.display = 'inline-block';
+            document.getElementById('reasoningContent').textContent = result.analysis.reasoning;
         }
         
         document.getElementById('recommendations').innerHTML = result.analysis.recommendations
             .map((rec, index) => `
-                <div class="recommendation">
-                    <span class="recommendation-number">${index + 1}.</span>${rec}
+                <div class="recommendation-card">
+                    <div class="rec-number">${index + 1}</div>
+                    <div class="rec-text">${rec}</div>
                 </div>
             `).join('');
+
+        document.getElementById('showAnalysisBtn').addEventListener('click', () => {
+            document.getElementById('analysisModal').classList.add('active');
+        });
+
+        window.closeAnalysisModal = function() {
+            document.getElementById('analysisModal').classList.remove('active');
+        };
+
+        // Close modal on outside click
+        document.getElementById('analysisModal').addEventListener('click', (e) => {
+            if (e.target.id === 'analysisModal') closeAnalysisModal();
+        });
 
         document.getElementById('scoreBtn').addEventListener('click', () => {
             document.getElementById('scoreModal').classList.add('active');
