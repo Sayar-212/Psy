@@ -1,4 +1,4 @@
-class PsyGenAssessment {
+class PsyGenChat {
     constructor() {
         this.currentQuestion = 0;
         this.responses = [];
@@ -199,7 +199,7 @@ class PsyGenAssessment {
     
     askNextQuestion() {
         if (this.currentQuestion >= this.questions.length) {
-            this.finishAssessment();
+            this.finishChat();
             return;
         }
         
@@ -267,7 +267,7 @@ class PsyGenAssessment {
         }
     }
     
-    async finishAssessment() {
+    async finishChat() {
         setTimeout(() => {
             this.addBotMessage("Thank you so much for being honest with me. You did great! 🌟");
             setTimeout(async () => {
@@ -363,5 +363,5 @@ class PsyGenAssessment {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    window.psyGenInstance = new PsyGenAssessment();
+    window.psyGenInstance = new PsyGenChat();
 });

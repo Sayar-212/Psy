@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PsyGen - Mental Wellness Assessment</title>
+    <title>PsyGen - Mental Wellness Chat</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="chatbot.css">
     <style>
@@ -62,15 +62,15 @@
             <div class="disclaimer-content">
                 <div class="disclaimer-section">
                     <h3>I. Confidentiality and Privacy</h3>
-                    <p>This psychological assessment session is strictly confidential and designed for individual use only. The platform maintains a zero-data-retention policy, ensuring that all responses, analyses, and personal information are processed in real-time without storage, logging, or retention. No user data, conversation history, or analytical results are stored in databases, temporary files, or backup systems. Each session operates independently with complete data isolation to protect your privacy.</p>
+                    <p>This psychological chat session is strictly confidential and designed for individual use only. The platform maintains a zero-data-retention policy, ensuring that all responses, analyses, and personal information are processed in real-time without storage, logging, or retention. No user data, conversation history, or analytical results are stored in databases, temporary files, or backup systems. Each session operates independently with complete data isolation to protect your privacy.</p>
                 </div>
                 <div class="disclaimer-section">
                     <h3>II. Security Protocols and Monitoring</h3>
-                    <p>To maintain the integrity and confidentiality of your assessment, advanced security measures are implemented throughout the platform. Screenshot capabilities, screen recording functions, and print screen operations are systematically disabled and actively monitored. Any attempt to capture, record, or document content will trigger immediate security protocols and result in session termination.</p>
+                    <p>To maintain the integrity and confidentiality of your session, advanced security measures are implemented throughout the platform. Screenshot capabilities, screen recording functions, and print screen operations are systematically disabled and actively monitored. Any attempt to capture, record, or document content will trigger immediate security protocols and result in session termination.</p>
                 </div>
                 <div class="disclaimer-section">
                     <h3>III. Prohibited Activities</h3>
-                    <p>The following activities are strictly prohibited during your assessment session: (a) Screen sharing through any application including but not limited to Google Meet, Zoom, Microsoft Teams, or similar platforms; (b) Text selection, copy operations, or paste functions; (c) Tab switching, window changes, or multi-application usage; (d) Remote desktop connections or collaborative viewing tools; (e) Group usage, shared access, or collaborative sessions of any kind.</p>
+                    <p>The following activities are strictly prohibited during your chat session: (a) Screen sharing through any application including but not limited to Google Meet, Zoom, Microsoft Teams, or similar platforms; (b) Text selection, copy operations, or paste functions; (c) Tab switching, window changes, or multi-application usage; (d) Remote desktop connections or collaborative viewing tools; (e) Group usage, shared access, or collaborative sessions of any kind.</p>
                 </div>
                 <div class="disclaimer-section">
                     <h3>IV. Behavioral Monitoring</h3>
@@ -78,15 +78,15 @@
                 </div>
                 <div class="disclaimer-section">
                     <h3>V. Terms of Agreement</h3>
-                    <p>By proceeding with this assessment, you acknowledge that you have read, understood, and agree to comply with all security protocols and confidentiality measures outlined herein. You confirm that you will access this platform individually and privately, maintaining the highest standards of security and confidentiality throughout your session. Violation of any terms may result in immediate termination of access and potential restriction from future use of the platform.</p>
+                    <p>By proceeding with this chat, you acknowledge that you have read, understood, and agree to comply with all security protocols and confidentiality measures outlined herein. You confirm that you will access this platform individually and privately, maintaining the highest standards of security and confidentiality throughout your session. Violation of any terms may result in immediate termination of access and potential restriction from future use of the platform.</p>
                 </div>
                 
                 <div class="agreement-section">
                     <label class="checkbox-container">
                         <input type="checkbox" id="agreeCheckbox">
-                        I have read and understood the Security & Privacy Agreement above, and I agree to comply with all terms and conditions outlined herein, including maintaining complete confidentiality and adhering to all security protocols during my assessment session.
+                        I have read and understood the Security & Privacy Agreement above, and I agree to comply with all terms and conditions outlined herein, including maintaining complete confidentiality and adhering to all security protocols during my chat session.
                     </label>
-                    <button class="disclaimer-btn" id="proceedBtn" disabled onclick="acceptDisclaimer()">Proceed to Assessment</button>
+                    <button class="disclaimer-btn" id="proceedBtn" disabled onclick="acceptDisclaimer()">Start Chat</button>
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@
     <div class="termination-overlay" id="terminationOverlay">
         <div class="termination-content">
             <h2>⚠️ Screenshot Detected</h2>
-            <p>For privacy and security reasons, screenshots are not allowed during this assessment.</p>
+            <p>For privacy and security reasons, screenshots are not allowed during this session.</p>
             <button class="termination-btn" onclick="confirmTermination()">OK</button>
         </div>
     </div>
