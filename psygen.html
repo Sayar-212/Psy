@@ -17,6 +17,23 @@
         .termination-content p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 2rem; }
         .termination-btn { background: #fff; color: #000; border: none; padding: 1rem 3rem; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: inherit; }
         .termination-btn:hover { opacity: 0.9; }
+        
+        .disclaimer-overlay { position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: rgba(0, 0, 0, 0.95); z-index: 10000; }
+        .disclaimer-modal { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0; padding: 0; width: 100%; min-height: 100vh; backdrop-filter: blur(20px); }
+        .disclaimer-header { text-align: center; padding: 4rem 4rem 2rem; }
+        .disclaimer-header h2 { font-family: 'Times New Roman', serif; font-size: 2.5rem; font-weight: 600; margin-bottom: 1rem; color: #fff; }
+        .disclaimer-header p { font-family: 'Times New Roman', serif; font-size: 1.25rem; color: rgba(255, 255, 255, 0.8); }
+        .disclaimer-content { padding: 2rem 8rem 4rem; }
+        .disclaimer-section { margin-bottom: 3rem; }
+        .disclaimer-section h3 { font-family: 'Times New Roman', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; color: #fff; }
+        .disclaimer-section p { font-family: 'Times New Roman', serif; font-size: 1.125rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8; }
+        .agreement-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+        .checkbox-container { display: inline-flex; align-items: center; margin-bottom: 1.5rem; font-family: 'Times New Roman', serif; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.8); cursor: pointer; }
+        .checkbox-container input { margin-right: 0.5rem; transform: scale(0.75); }
+        .disclaimer-btn { background: #fff; color: #000; border: none; padding: 1rem 3rem; font-size: 1.125rem; font-weight: 500; cursor: pointer; font-family: 'Times New Roman', serif; border-radius: 6px; transition: all 0.2s; }
+        .disclaimer-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .disclaimer-btn:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2); }
+
     </style>
 </head>
 <body>
@@ -36,7 +53,46 @@
         </div>
     </nav>
 
-    <div class="intro-container" id="introContainer">
+    <div class="disclaimer-overlay" id="disclaimerOverlay">
+        <div class="disclaimer-modal">
+            <div class="disclaimer-header">
+                <h2>⚠️ Security & Privacy Agreement</h2>
+                <p>Please read and accept our security protocols</p>
+            </div>
+            <div class="disclaimer-content">
+                <div class="disclaimer-section">
+                    <h3>I. Confidentiality and Privacy</h3>
+                    <p>This psychological assessment session is strictly confidential and designed for individual use only. The platform maintains a zero-data-retention policy, ensuring that all responses, analyses, and personal information are processed in real-time without storage, logging, or retention. No user data, conversation history, or analytical results are stored in databases, temporary files, or backup systems. Each session operates independently with complete data isolation to protect your privacy.</p>
+                </div>
+                <div class="disclaimer-section">
+                    <h3>II. Security Protocols and Monitoring</h3>
+                    <p>To maintain the integrity and confidentiality of your assessment, advanced security measures are implemented throughout the platform. Screenshot capabilities, screen recording functions, and print screen operations are systematically disabled and actively monitored. Any attempt to capture, record, or document content will trigger immediate security protocols and result in session termination.</p>
+                </div>
+                <div class="disclaimer-section">
+                    <h3>III. Prohibited Activities</h3>
+                    <p>The following activities are strictly prohibited during your assessment session: (a) Screen sharing through any application including but not limited to Google Meet, Zoom, Microsoft Teams, or similar platforms; (b) Text selection, copy operations, or paste functions; (c) Tab switching, window changes, or multi-application usage; (d) Remote desktop connections or collaborative viewing tools; (e) Group usage, shared access, or collaborative sessions of any kind.</p>
+                </div>
+                <div class="disclaimer-section">
+                    <h3>IV. Behavioral Monitoring</h3>
+                    <p>The platform employs comprehensive behavioral monitoring systems to detect potential security breaches, unauthorized access attempts, or circumvention of security measures. Real-time monitoring includes detection of tab switching, window focus changes, and suspicious activity patterns. Any violation of these protocols will result in immediate session termination and may lead to permanent access restriction.</p>
+                </div>
+                <div class="disclaimer-section">
+                    <h3>V. Terms of Agreement</h3>
+                    <p>By proceeding with this assessment, you acknowledge that you have read, understood, and agree to comply with all security protocols and confidentiality measures outlined herein. You confirm that you will access this platform individually and privately, maintaining the highest standards of security and confidentiality throughout your session. Violation of any terms may result in immediate termination of access and potential restriction from future use of the platform.</p>
+                </div>
+                
+                <div class="agreement-section">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="agreeCheckbox">
+                        I have read and understood the Security & Privacy Agreement above, and I agree to comply with all terms and conditions outlined herein, including maintaining complete confidentiality and adhering to all security protocols during my assessment session.
+                    </label>
+                    <button class="disclaimer-btn" id="proceedBtn" disabled onclick="acceptDisclaimer()">Proceed to Assessment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="intro-container" id="introContainer" style="display: none;">
         <div class="intro-content">
             <div class="intro-icon">💙</div>
             <h1 class="intro-title" id="introTitle"></h1>
@@ -62,6 +118,24 @@
         </div>
     </div>
 
+    <script>
+        document.getElementById('agreeCheckbox').addEventListener('change', function() {
+            document.getElementById('proceedBtn').disabled = !this.checked;
+        });
+        
+        function acceptDisclaimer() {
+            document.getElementById('disclaimerOverlay').style.display = 'none';
+            document.getElementById('introContainer').style.display = 'flex';
+            // Trigger the intro animation after disclaimer is accepted
+            setTimeout(() => {
+                if (window.psyGenInstance) {
+                    window.psyGenInstance.startIntroAnimation();
+                }
+            }, 100);
+        }
+        
+
+    </script>
     <script src="chatbot.js"></script>
 </body>
 </html>

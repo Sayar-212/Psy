@@ -32,7 +32,7 @@ class PsyGenAssessment {
         this.sendBtn = document.getElementById('sendBtn');
         this.bgMusic = document.getElementById('bgMusic');
         
-        this.startIntroAnimation();
+        // Don't auto-start animation, wait for disclaimer acceptance
         
         this.sendBtn.addEventListener('click', () => this.sendMessage());
         this.userInput.addEventListener('keypress', (e) => {
@@ -79,6 +79,11 @@ class PsyGenAssessment {
     }
     
     startIntroAnimation() {
+        // Only start if disclaimer is accepted (intro container is visible)
+        if (document.getElementById('introContainer').style.display === 'none') {
+            return;
+        }
+        
         const title = document.getElementById('introTitle');
         const description = document.getElementById('introDescription');
         
@@ -358,5 +363,5 @@ class PsyGenAssessment {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new PsyGenAssessment();
+    window.psyGenInstance = new PsyGenAssessment();
 });
