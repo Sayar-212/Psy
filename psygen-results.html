@@ -50,6 +50,16 @@
             <p id="mainMessage"></p>
         </div>
         
+        <div class="result-section" id="reasoningSection" style="display: none;">
+            <h2>🧠 Detailed Analysis</h2>
+            <div id="reasoning" style="color: rgba(255, 255, 255, 0.85); line-height: 1.8; white-space: pre-wrap;"></div>
+        </div>
+
+        <div class="result-section" id="detailedAnalysisSection" style="display: none;">
+            <h2>📊 Comprehensive Assessment</h2>
+            <div id="detailedAnalysis" style="color: rgba(255, 255, 255, 0.85); line-height: 1.8; white-space: pre-wrap;"></div>
+        </div>
+
         <div class="result-section">
             <h2>💙 Personalized Recommendations</h2>
             <div id="recommendations"></div>
@@ -88,6 +98,18 @@
         }
 
         document.getElementById('mainMessage').textContent = result.analysis.message;
+        
+        // Display reasoning if available
+        if (result.analysis.reasoning) {
+            document.getElementById('reasoningSection').style.display = 'block';
+            document.getElementById('reasoning').textContent = result.analysis.reasoning;
+        }
+        
+        // Display detailed analysis if available
+        if (result.analysis.detailed_analysis) {
+            document.getElementById('detailedAnalysisSection').style.display = 'block';
+            document.getElementById('detailedAnalysis').textContent = result.analysis.detailed_analysis;
+        }
         
         document.getElementById('recommendations').innerHTML = result.analysis.recommendations
             .map((rec, index) => `
