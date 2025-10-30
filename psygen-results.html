@@ -129,28 +129,36 @@
         console.log('Full result:', result);
         console.log('Analysis object:', result.analysis);
 
-        document.getElementById('severityBadge').textContent = `Severity: ${result.analysis.level}`;
-        document.getElementById('mainMessage').textContent = result.analysis.message;
+        document.getElementById('severityBadge').textContent = `Severity: ${result.analysis.level || 'N/A'}`;
+        document.getElementById('mainMessage').textContent = result.analysis.message || 'Thank you for completing the assessment.';
         
         // Display detailed analysis if available
-        if (result.analysis.detailed_analysis) {
+        if (result.analysis.detailed_analysis && result.analysis.detailed_analysis.trim()) {
             document.getElementById('detailedAnalysisCard').style.display = 'block';
             document.getElementById('detailedAnalysis').textContent = result.analysis.detailed_analysis;
         }
         
         // Display reasoning button if available
-        if (result.analysis.reasoning) {
+        if (result.analysis.reasoning && result.analysis.reasoning.trim()) {
             document.getElementById('showAnalysisBtn').style.display = 'inline-block';
             document.getElementById('reasoningContent').textContent = result.analysis.reasoning;
         }
         
-        document.getElementById('recommendations').innerHTML = result.analysis.recommendations
-            .map((rec, index) => `
-                <div class="recommendation-card">
-                    <div class="rec-number">${index + 1}</div>
-                    <div class="rec-text">${rec}</div>
-                </div>
-            `).join('');
+        // Display recommendations
+        const recommendations = result.analysis.recommendations || [];
+        console.log('Recommendations:', recommendations);
+        
+        if (recommendations.length > 0) {
+            document.getElementById('recommendations').innerHTML = recommendations
+                .map((rec, index) => `
+                    <div class="recommendation-card">
+                        <div class="rec-number">${index + 1}</div>
+                        <div class="rec-text">${rec}</div>
+                    </div>
+                `).join('');
+        } else {
+            document.getElementById('recommendations').innerHTML = '<p style="color: rgba(255,255,255,0.6);">No recommendations available.</p>';
+        }
 
         document.getElementById('showAnalysisBtn').addEventListener('click', () => {
             document.getElementById('analysisModal').classList.add('active');

@@ -638,31 +638,67 @@ Return JSON format (ALL FOUR FIELDS REQUIRED):
         )
         
         content = response.choices[0].message.content.strip()
+        print(f"\n=== RAW RESPONSE (first 1000 chars) ===\n{content[:1000]}\n")
         
-        # Extract JSON - find the outermost braces
-        json_start = content.find('{')
-        json_end = content.rfind('}')
+        # Extract JSON with proper brace matching
+        def extract_json(text):
+            start = text.find('{')
+            if start == -1:
+                return None
+            
+            brace_count = 0
+            in_string = False
+            escape = False
+            
+            for i in range(start, len(text)):
+                char = text[i]
+                
+                if escape:
+                    escape = False
+                    continue
+                    
+                if char == '\\':
+                    escape = True
+                    continue
+                    
+                if char == '"':
+                    in_string = not in_string
+                    continue
+                    
+                if not in_string:
+                    if char == '{':
+                        brace_count += 1
+                    elif char == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            return text[start:i+1]
+            return None
         
-        if json_start != -1 and json_end != -1:
-            json_str = content[json_start:json_end+1]
-            try:
-                result = json.loads(json_str)
-                return {
-                    "level": level,
-                    "reasoning": result.get("reasoning", ""),
-                    "detailed_analysis": result.get("detailed_analysis", ""),
-                    "message": result.get("message", "You're taking an important step by checking in with yourself."),
-                    "recommendations": result.get("recommendations", [
-                        "Practice deep breathing for 5 minutes daily",
-                        "Reach out to a friend or family member",
-                        "Maintain a regular sleep schedule"
-                    ])
-                }
-            except json.JSONDecodeError as je:
-                print(f"JSON decode error: {je}")
-                print(f"Content: {content[:500]}")
+        json_str = extract_json(content)
+        if not json_str:
+            raise ValueError("No valid JSON found in response")
+        
+        try:
+            result = json.loads(json_str)
+            print(f"\n=== PARSED RESULT ===\nKeys: {list(result.keys())}\nRecommendations count: {len(result.get('recommendations', []))}\n")
+            
+            return {
+                "level": level,
+                "reasoning": result.get("reasoning", ""),
+                "detailed_analysis": result.get("detailed_analysis", ""),
+                "message": result.get("message", "You're taking an important step by checking in with yourself."),
+                "recommendations": result.get("recommendations", [
+                    "Practice deep breathing for 5 minutes daily",
+                    "Reach out to a friend or family member",
+                    "Maintain a regular sleep schedule"
+                ])
+            }
+        except json.JSONDecodeError as je:
+            print(f"\n=== JSON DECODE ERROR ===\n{je}")
+            print(f"\n=== ATTEMPTED TO PARSE ===\n{json_str[:500]}\n")
+            raise
     except Exception as e:
-        print(f"Analysis error: {e}")
+        print(f"\n=== ANALYSIS ERROR ===\n{e}")
         import traceback
         traceback.print_exc()
     
