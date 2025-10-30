@@ -454,177 +454,29 @@ async def analyze_depression(input_data: DepressionAnalysis):
         level = "Severe"
         severity = "severe"
     
-    prompt = f"""You are an expert mental health counselor with deep expertise in depression treatment, cognitive-behavioral therapy, and personalized care planning. Provide a COMPREHENSIVE, DETAILED analysis with ABSOLUTELY NO length restrictions. Write as much as needed to be truly helpful.
+    prompt = f"""Analyze depression assessment. Score: {score}/30, Level: {level}, Responses: {responses_text}
 
-Assessment Results:
-- Total Score: {score}/30
-- Severity Level: {level}
-- User's Complete Responses: {responses_text}
+Return JSON with 4 fields:
+1. "reasoning": Brief analysis of symptom patterns and severity
+2. "detailed_analysis": 2-3 sentence clinical assessment
+3. "message": Empathetic 2-3 sentence personalized message
+4. "recommendations": Array of 5-7 actionable recommendations
 
-=== IMPORTANT: You MUST provide FOUR separate sections in your JSON response ===
-1. "reasoning": Your complete Chain-of-Thought analysis process (all 4 steps detailed, write extensively)
-2. "detailed_analysis": Comprehensive clinical assessment of their responses (write multiple paragraphs)
-3. "message": Empathetic, personalized message (write as much as needed, multiple paragraphs)
-4. "recommendations": Array of detailed, actionable recommendations (10-15 recommendations)
-
-=== CHAIN-OF-THOUGHT ANALYSIS FRAMEWORK ===
-
-Step 1: HOLISTIC PATTERN RECOGNITION
-- Analyze recurring themes across all responses
-- Identify primary symptom clusters (mood, cognitive, behavioral, physical)
-- Detect protective factors and strengths mentioned
-- Note specific triggers or stressors revealed
-- Recognize coping strategies currently employed
-
-Step 2: SEVERITY CONTEXTUALIZATION
-- Map score to clinical depression spectrum
-- Consider functional impairment level
-- Assess chronicity vs acute episode indicators
-- Evaluate risk factors and warning signs
-- Identify areas of greatest concern
-
-Step 3: PERSONALIZATION FACTORS
-- Extract individual circumstances from responses
-- Note specific challenges mentioned (sleep, relationships, work, etc.)
-- Identify personal values and interests hinted at
-- Recognize communication style and receptivity
-- Consider readiness for change indicators
-
-Step 4: INTERVENTION STRATEGY FORMULATION
-- Match interventions to severity level
-- Prioritize immediate vs long-term needs
-- Balance self-help with professional support
-- Consider accessibility and feasibility
-- Layer recommendations from foundational to advanced
-
-=== DETAILED EXAMPLES BY SEVERITY ===
-
-MINIMAL (0-5): Focus on maintenance and prevention
-- Reinforce current healthy patterns
-- Introduce resilience-building practices
-- Encourage continued self-awareness
-- Provide psychoeducation on early warning signs
-
-MILD (6-10): Emphasize early intervention and skill-building
-- Teach specific coping techniques
-- Address emerging symptoms proactively
-- Strengthen social support networks
-- Introduce structured self-care routines
-- Monitor for progression
-
-MODERATE (11-15): Implement active treatment strategies
-- Recommend professional consultation
-- Provide evidence-based self-help interventions
-- Address functional impairments directly
-- Create structured daily routines
-- Develop crisis management plan
-- Focus on behavioral activation
-
-MODERATELY SEVERE (16-20): Urgent professional intervention needed
-- Strongly recommend immediate professional help
-- Provide crisis resources prominently
-- Suggest medication evaluation
-- Emphasize safety planning
-- Recommend intensive support structures
-- Address barriers to treatment access
-
-SEVERE (21-30): Crisis-level intervention required
-- Urgent professional/emergency care essential
-- Provide immediate crisis hotlines
-- Recommend emergency services if needed
-- Emphasize safety as top priority
-- Suggest inpatient evaluation if appropriate
-- Involve support system immediately
-
-=== YOUR COMPREHENSIVE TASK ===
-
-Provide an UNRESTRICTED, DETAILED response with:
-
-1. EMPATHETIC MESSAGE (NO length limit - write multiple paragraphs):
-   - Acknowledge their specific experiences mentioned in responses
-   - Validate their feelings without minimizing
-   - Recognize their courage in completing assessment
-   - Provide hope while being realistic
-   - Use warm, human, non-clinical language
-   - Reference specific details from their responses
-   - Address their unique situation
-   - Write extensively - this is their personal message
-
-2. COMPREHENSIVE RECOMMENDATIONS (10-15 detailed recommendations):
-   - Provide SPECIFIC, ACTIONABLE steps (not generic advice)
-   - Include immediate (today/this week) actions
-   - Add short-term (this month) strategies
-   - Include long-term (ongoing) practices
-   - Cover multiple domains: physical, emotional, social, cognitive, behavioral
-   - Explain WHY each recommendation helps (brief rationale)
-   - Tailor to their severity level and specific responses
-   - Include professional help guidance appropriate to severity
-   - Add crisis resources if score > 15
-   - Provide practical implementation tips
-   - Address potential barriers and solutions
-   - Layer from easiest to more challenging
-   - **IMPORTANT: Include 2-3 personalized story/book/song recommendations based on their depression category. Choose titles that resonate with their emotional state. Examples:**
-     - For minimal: Uplifting stories like "The Alchemist", songs like "Here Comes the Sun"
-     - For mild: Relatable content like "Reasons to Stay Alive", "Shake It Out" by Florence + The Machine
-     - For moderate: Validating content like "It's Kind of a Funny Story", "Breathe Me" by Sia
-     - For severe: Hopeful content like "Man's Search for Meaning", "Fix You" by Coldplay
-   - Let the AI choose freely based on the user's specific responses and emotional state
-
-=== EXAMPLE OUTPUT STRUCTURE ===
-
-For a score of 14 (Moderate) with responses mentioning sleep issues, loss of interest, and work stress:
-
+Example:
 {{
-    "reasoning": "Step 1 - Pattern Recognition: Analyzing the user's responses, I observe recurring themes of sleep disruption (mentioned difficulty sleeping), anhedonia (loss of interest in previously enjoyed activities), and occupational stress (work-related concerns). The language used suggests moderate distress without severe hopelessness. Step 2 - Severity Context: The score of 14 places this in the moderate range, indicating significant symptoms that are impacting daily functioning but not yet at a crisis level. The combination of sleep, interest, and stress factors suggests a multifaceted presentation requiring comprehensive intervention. Step 3 - Personalization: The specific mention of work stress indicates environmental stressors may be contributing factors. The acknowledgment of lost interest suggests awareness and some insight, which is a positive prognostic indicator. Step 4 - Intervention Strategy: Given moderate severity, a combination of professional support and structured self-help strategies is appropriate, with emphasis on sleep hygiene, behavioral activation, and stress management.",
-    
-    "detailed_analysis": "Based on your responses, you're experiencing a moderate level of depressive symptoms characterized primarily by sleep disturbance, reduced interest in activities, and work-related stress. This constellation of symptoms suggests your depression is significantly impacting your quality of life and daily functioning. The sleep issues you mentioned are particularly important because sleep disruption both contributes to and is exacerbated by depression, creating a cycle that needs to be addressed. Your loss of interest in previously enjoyable activities (anhedonia) is a core symptom of depression and indicates that your brain's reward system is being affected. The work stress you referenced may be both a trigger and a maintaining factor. However, the fact that you completed this assessment and can articulate your experiences demonstrates important self-awareness and motivation for change, which are valuable strengths in your recovery process. Your symptom profile suggests you would benefit significantly from professional therapeutic support combined with targeted lifestyle interventions.",
-    
-    "message": "I want to acknowledge how difficult it must be to experience [specific symptoms they mentioned]. The fact that you're here, taking this assessment and being honest about your struggles, shows real strength and self-awareness. What you're going through is valid, and it's important to know that these feelings, while very real and challenging right now, can improve with the right support and strategies. You don't have to navigate this alone, and there are concrete steps we can take together to help you feel better. Your responses show that [specific insight from their answers], which tells me [personalized observation]. Let's work on building a path forward that feels manageable and supportive for you.",
-    
+    "reasoning": "Score indicates {severity} depression with symptoms of [key patterns]. Requires [intervention level].",
+    "detailed_analysis": "Your responses show [main symptoms]. This impacts [areas of life].",
+    "message": "Taking this assessment shows strength. These feelings can improve with support.",
     "recommendations": [
-        "IMMEDIATE: Tonight, try the 4-7-8 breathing technique before bed (inhale 4 counts, hold 7, exhale 8) to help calm your nervous system and improve sleep quality. Sleep disruption amplifies depression symptoms, so addressing this first can create a foundation for other improvements.",
-        
-        "THIS WEEK: Schedule a consultation with a mental health professional (therapist or counselor). Given your moderate symptom level, professional support can provide personalized strategies and prevent progression. Many offer telehealth options for convenience. If cost is a concern, look into sliding-scale clinics or employee assistance programs.",
-        
-        "DAILY ROUTINE: Establish a consistent wake time (even weekends) and get 10-15 minutes of morning sunlight exposure. This regulates your circadian rhythm and boosts serotonin production, directly impacting mood and energy levels.",
-        
-        "BEHAVIORAL ACTIVATION: Choose ONE small activity you used to enjoy and commit to doing it for just 10 minutes, three times this week. You mentioned losing interest in things - behavioral activation (doing activities even when you don't feel like it) is proven to rebuild motivation and pleasure over time.",
-        
-        "WORK STRESS MANAGEMENT: Since you mentioned work stress, try the 'Pomodoro Technique' - work in focused 25-minute blocks with 5-minute breaks. This prevents overwhelm and maintains productivity without burnout. Also, practice setting one boundary at work this week (saying no to one non-essential task).",
-        
-        "SOCIAL CONNECTION: Reach out to one trusted person this week - not necessarily to talk about depression, but just to connect. Even a brief text or coffee chat can reduce isolation. If you're not ready to talk about your feelings, that's okay - connection itself is therapeutic.",
-        
-        "PHYSICAL MOVEMENT: Aim for 20-30 minutes of movement daily - walking, stretching, dancing, anything that feels accessible. Exercise is as effective as medication for mild-moderate depression. Start small: even a 10-minute walk around the block counts.",
-        
-        "NUTRITION SUPPORT: Focus on regular meals with protein and complex carbs to stabilize blood sugar and mood. Depression often disrupts eating patterns. Omega-3 fatty acids (fish, walnuts, flaxseed) have mood-supporting properties.",
-        
-        "COGNITIVE TECHNIQUE: When negative thoughts arise, practice the 'thought record' technique - write down the thought, evidence for/against it, and a balanced alternative. This builds awareness of cognitive distortions common in depression.",
-        
-        "SELF-COMPASSION PRACTICE: Each day, speak to yourself as you would a good friend going through this. Depression often comes with harsh self-criticism. Try this: 'I'm struggling right now, and that's okay. I'm doing my best, and I deserve kindness.'",
-        
-        "LIMIT DECISION FATIGUE: Simplify daily decisions (plan meals, lay out clothes the night before) to conserve mental energy for more important things. Depression depletes cognitive resources, so reducing unnecessary decisions helps.",
-        
-        "CRISIS PLAN: Create a written plan for difficult moments - list 3 people you can call, 3 activities that help (even slightly), and crisis hotline numbers (988 for Suicide & Crisis Lifeline). Having this ready reduces panic when symptoms intensify.",
-        
-        "TRACK PATTERNS: Keep a simple mood journal (1-10 scale + brief note) to identify triggers and patterns. This data helps you and any professional you work with understand your unique depression profile.",
-        
-        "MEDICATION CONSIDERATION: Given your moderate severity, consider scheduling a psychiatric evaluation to discuss whether medication might be helpful alongside therapy. Antidepressants can be very effective for moderate depression and aren't a sign of weakness - they're a tool for healing.",
-        
-        "LONG-TERM: Explore evidence-based therapies like Cognitive Behavioral Therapy (CBT) or Acceptance and Commitment Therapy (ACT), which have strong research support for depression. These provide lasting skills beyond symptom relief."
+        "Try 4-7-8 breathing before bed for better sleep",
+        "Schedule consultation with mental health professional",
+        "Get 10-15 min morning sunlight daily",
+        "Do one enjoyable activity for 10 min, 3x this week",
+        "Reach out to one trusted person this week"
     ]
 }}
 
-=== NOW ANALYZE THIS USER ===
-
-Create a comprehensive, personalized, DETAILED response for this specific user with their {severity} level and unique responses. NO length restrictions - be thorough, specific, and deeply helpful.
-
-Return JSON format (ALL FOUR FIELDS REQUIRED):
-{{
-    "reasoning": "Your complete Chain-of-Thought analysis covering all 4 steps in detail",
-    "detailed_analysis": "Your comprehensive clinical assessment of their specific responses and symptom profile",
-    "message": "Your detailed, personalized, empathetic message here",
-    "recommendations": ["Detailed recommendation 1 with rationale", "Detailed recommendation 2 with rationale", ...]
-}}"""
+Be concise but helpful. Return only JSON."""
     
     try:
         response = client.chat.completions.create(
@@ -634,7 +486,7 @@ Return JSON format (ALL FOUR FIELDS REQUIRED):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=8000
+            max_tokens=1000
         )
         
         content = response.choices[0].message.content.strip()
