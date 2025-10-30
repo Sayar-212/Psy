@@ -454,18 +454,18 @@ async def analyze_depression(input_data: DepressionAnalysis):
         level = "Severe"
         severity = "severe"
     
-    prompt = f"""You are an expert mental health counselor with deep expertise in depression treatment, cognitive-behavioral therapy, and personalized care planning. Provide a COMPREHENSIVE, DETAILED analysis with NO length restrictions.
+    prompt = f"""You are an expert mental health counselor with deep expertise in depression treatment, cognitive-behavioral therapy, and personalized care planning. Provide a COMPREHENSIVE, DETAILED analysis with ABSOLUTELY NO length restrictions. Write as much as needed to be truly helpful.
 
 Assessment Results:
 - Total Score: {score}/30
 - Severity Level: {level}
 - User's Complete Responses: {responses_text}
 
-=== IMPORTANT: You MUST provide THREE separate sections in your JSON response ===
-1. "reasoning": Your complete Chain-of-Thought analysis process (all 4 steps detailed)
-2. "detailed_analysis": Comprehensive clinical assessment of their responses
-3. "message": Empathetic, personalized message
-4. "recommendations": Array of detailed, actionable recommendations
+=== IMPORTANT: You MUST provide FOUR separate sections in your JSON response ===
+1. "reasoning": Your complete Chain-of-Thought analysis process (all 4 steps detailed, write extensively)
+2. "detailed_analysis": Comprehensive clinical assessment of their responses (write multiple paragraphs)
+3. "message": Empathetic, personalized message (write as much as needed, multiple paragraphs)
+4. "recommendations": Array of detailed, actionable recommendations (10-15 recommendations)
 
 === CHAIN-OF-THOUGHT ANALYSIS FRAMEWORK ===
 
@@ -540,7 +540,7 @@ SEVERE (21-30): Crisis-level intervention required
 
 Provide an UNRESTRICTED, DETAILED response with:
 
-1. EMPATHETIC MESSAGE (NO length limit):
+1. EMPATHETIC MESSAGE (NO length limit - write multiple paragraphs):
    - Acknowledge their specific experiences mentioned in responses
    - Validate their feelings without minimizing
    - Recognize their courage in completing assessment
@@ -548,8 +548,9 @@ Provide an UNRESTRICTED, DETAILED response with:
    - Use warm, human, non-clinical language
    - Reference specific details from their responses
    - Address their unique situation
+   - Write extensively - this is their personal message
 
-2. COMPREHENSIVE RECOMMENDATIONS (8-15 detailed recommendations):
+2. COMPREHENSIVE RECOMMENDATIONS (10-15 detailed recommendations):
    - Provide SPECIFIC, ACTIONABLE steps (not generic advice)
    - Include immediate (today/this week) actions
    - Add short-term (this month) strategies
@@ -562,6 +563,12 @@ Provide an UNRESTRICTED, DETAILED response with:
    - Provide practical implementation tips
    - Address potential barriers and solutions
    - Layer from easiest to more challenging
+   - **IMPORTANT: Include 2-3 personalized story/book/song recommendations based on their depression category. Choose titles that resonate with their emotional state. Examples:**
+     - For minimal: Uplifting stories like "The Alchemist", songs like "Here Comes the Sun"
+     - For mild: Relatable content like "Reasons to Stay Alive", "Shake It Out" by Florence + The Machine
+     - For moderate: Validating content like "It's Kind of a Funny Story", "Breathe Me" by Sia
+     - For severe: Hopeful content like "Man's Search for Meaning", "Fix You" by Coldplay
+   - Let the AI choose freely based on the user's specific responses and emotional state
 
 === EXAMPLE OUTPUT STRUCTURE ===
 
@@ -627,7 +634,7 @@ Return JSON format (ALL FOUR FIELDS REQUIRED):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=4000
+            max_tokens=8000
         )
         
         content = response.choices[0].message.content.strip()
