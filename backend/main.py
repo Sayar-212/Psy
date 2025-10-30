@@ -678,6 +678,9 @@ Return JSON format (ALL FOUR FIELDS REQUIRED):
         if not json_str:
             raise ValueError("No valid JSON found in response")
         
+        # Sanitize control characters
+        json_str = json_str.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
+        
         try:
             result = json.loads(json_str)
             print(f"\n=== PARSED RESULT ===\nKeys: {list(result.keys())}\nRecommendations count: {len(result.get('recommendations', []))}\n")
