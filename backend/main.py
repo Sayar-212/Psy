@@ -638,22 +638,33 @@ Return JSON format (ALL FOUR FIELDS REQUIRED):
         )
         
         content = response.choices[0].message.content.strip()
-        match = re.search(r'\{[^{}]*"message"[^{}]*"recommendations"[^{}]*\}', content, re.DOTALL)
-        if match:
-            result = json.loads(match.group())
-            return {
-                "level": level,
-                "reasoning": result.get("reasoning", ""),
-                "detailed_analysis": result.get("detailed_analysis", ""),
-                "message": result.get("message", "You're taking an important step by checking in with yourself."),
-                "recommendations": result.get("recommendations", [
-                    "Practice deep breathing for 5 minutes daily",
-                    "Reach out to a friend or family member",
-                    "Maintain a regular sleep schedule"
-                ])
-            }
+        
+        # Extract JSON - find the outermost braces
+        json_start = content.find('{')
+        json_end = content.rfind('}')
+        
+        if json_start != -1 and json_end != -1:
+            json_str = content[json_start:json_end+1]
+            try:
+                result = json.loads(json_str)
+                return {
+                    "level": level,
+                    "reasoning": result.get("reasoning", ""),
+                    "detailed_analysis": result.get("detailed_analysis", ""),
+                    "message": result.get("message", "You're taking an important step by checking in with yourself."),
+                    "recommendations": result.get("recommendations", [
+                        "Practice deep breathing for 5 minutes daily",
+                        "Reach out to a friend or family member",
+                        "Maintain a regular sleep schedule"
+                    ])
+                }
+            except json.JSONDecodeError as je:
+                print(f"JSON decode error: {je}")
+                print(f"Content: {content[:500]}")
     except Exception as e:
         print(f"Analysis error: {e}")
+        import traceback
+        traceback.print_exc()
     
     # Fallback recommendations
     return {

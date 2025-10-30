@@ -126,6 +126,9 @@
             window.location.href = 'psygen.html';
         }
 
+        console.log('Full result:', result);
+        console.log('Analysis object:', result.analysis);
+
         document.getElementById('severityBadge').textContent = `Severity: ${result.analysis.level}`;
         document.getElementById('mainMessage').textContent = result.analysis.message;
         
